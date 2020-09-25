@@ -1,3 +1,4 @@
+const { query } = require("express");
 // server.js
 // This is where your node app starts
 
@@ -17,8 +18,30 @@ app.get("/", function (request, response) {
 });
 
 //START OF YOUR CODE...
+app.listen(3000, ()=> {
+  console.log("Server is listening on port 3000. Ready to accept requests!");
+});
 
+app.get("/quotes", function (request, response) {
+  response.send(quotes);
+});
+
+app.get("/quotes/random", function (request, response) {
+  const random = pickFromArray(quotes);
+  response.send(random);
+});
+
+//level 2
+app.get("/quotes/search", function (request, response) {
+  const term = request.query.term;
+  const search = quotes.filter((quote) =>
+    quote.quote.toLowerCase().includes(term.toLowerCase())
+  );
+  response.send(search);
+
+});
 //...END OF YOUR CODE
+
 
 //You can use this function to pick one element at random from a given array
 //example: pickFromArray([1,2,3,4]), or
@@ -27,6 +50,7 @@ app.get("/", function (request, response) {
 function pickFromArray(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
+
 
 //Start our server so that it listens for HTTP requests!
 const listener = app.listen(process.env.PORT, function () {
